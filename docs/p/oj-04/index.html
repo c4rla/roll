@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='🎶我排着队，拿着爱的号码牌'><title>做题笔记04：堆/栈/队列</title>
+
+<link rel='canonical' href='https://c4rla.github.io/roll/p/oj-04/'>
+
+<link rel="stylesheet" href="https://c4rla.github.io/roll/scss/style.min.b949db8bead9abdc40291b93383b8da6abc3aa62e74f5580356c06ddbb792dab.css"><meta property='og:title' content='做题笔记04：堆/栈/队列'>
+<meta property='og:description' content='🎶我排着队，拿着爱的号码牌'>
+<meta property='og:url' content='https://c4rla.github.io/roll/p/oj-04/'>
+<meta property='og:site_name' content='卷心菜'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='OJ' /><meta property='article:published_time' content='2022-04-06T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-04-06T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="做题笔记04：堆/栈/队列">
+<meta name="twitter:description" content="🎶我排着队，拿着爱的号码牌">
+    <link rel="shortcut icon" href="https://c4rla.github.io/roll/img/favicon.png" />
+<style type="text/css">
+    .site-info {text-align: center;}
+    .site-info > figure.site-avatar {margin: 0 auto var(--sidebar-element-separation);}
+     
+     
+    @media (min-width: 768px) {.container .left-sidebar {width: 100%;}}
+    blockquote.quote {position: relative; margin: 1.5em -10em 0 -10; padding-left: 18%; padding-right: 15%; border: none; background-color: transparent}
+    blockquote.quote::before {position: absolute; left: 7%; content: '“'; color: var(--color-contrast-low); font-family: serif; font-size: 3em; font-weight: 700; line-height: 1}
+    blockquote cite {display: block; text-align: right;}
+    .article-content>p:not(.no-text) {overflow-x: auto; overflow-y: hidden;}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="https://c4rla.github.io/roll/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="https://c4rla.github.io/roll/p/oj-04/">做题笔记04：堆/栈/队列</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        🎶我排着队，拿着爱的号码牌
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2022年4月6日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="bm42-用两个栈实现队列">BM42 用两个栈实现队列</h2>
+<p>栈相当于把队列的一部分元素以相反的方向存储，再使用一个栈把所有元素的顺序反过来就是队列。等队列栈空了，就再做一次相同的事情。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack1</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack2</span><span class="p">:</span> <span class="c1"># 队列为空</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack2</span><span class="p">:</span> <span class="c1"># 栈2为空，把栈1所有元素入栈</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stack2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stack1</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack2</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</code></pre></div><h2 id="bm43-包含min函数的栈">BM43 包含min函数的栈</h2>
+<p>空间换时间，再准备一个栈缓存当前的min就好：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack_min</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack_min</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stack_min</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stack_min</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack_min</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack_min</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">top</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack_min</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div><h2 id="bm44-有效括号序列">BM44 有效括号序列</h2>
+<p>使用一个栈存储已经出现的左括号：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">stack</span><span class="p">,</span> <span class="n">pairs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">{</span><span class="s1">&#39;]&#39;</span><span class="p">:</span> <span class="s1">&#39;[&#39;</span><span class="p">,</span> <span class="s1">&#39;)&#39;</span><span class="p">:</span> <span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="s1">&#39;}&#39;</span><span class="p">:</span> <span class="s1">&#39;{&#39;</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">char</span> <span class="ow">in</span> <span class="s1">&#39;([{&#39;</span><span class="p">:</span>
+                <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">char</span> <span class="ow">in</span> <span class="s1">&#39;)]}&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">stack</span> <span class="ow">or</span> <span class="n">pairs</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">!=</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">stack</span>
+</code></pre></div><h2 id="bm45-滑动窗口的最大值">BM45 滑动窗口的最大值</h2>
+<p>又是一道难题，首先想到的自然是优先队列，但是时间复杂度 O(nlog(n)) 不能满足要求，只能跑去看题解……</p>
+<p>题解的原理其实很简单：希望在下一个滑动窗口中利用前面滑动窗口的最大值信息，即维护一个窗口大小的双向队列。具体而言，因为当前窗口最大值前面的元素，对下一个窗口的最大值毫无影响，因此不需要存储，队列里存储的值即为 [当前窗口的最大值, 前一个数到滑动窗口末的最大值, 前一个数到滑动窗口末的最大值, ...]。</p>
+<p>如何形成这样的队列？只要每个新元素在入列之前，把栈中比它小的元素从右边出列即可。窗口开始滑动时，如果队列第一个元素滑出窗口就出列，然后把当前元素入列。</p>
+<p>这个思路有点像动态规划，也有点像二叉搜索树的前序遍历……</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">maxInWindows</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">num</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span> <span class="c1"># 得到第一个窗口的状态</span>
+            <span class="k">while</span> <span class="n">window</span> <span class="ow">and</span> <span class="n">num</span><span class="p">[</span><span class="n">window</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">window</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">window</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">num</span><span class="p">[</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">size</span><span class="p">:</span>
+                <span class="n">window</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">while</span> <span class="n">window</span> <span class="ow">and</span> <span class="n">num</span><span class="p">[</span><span class="n">window</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">window</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">window</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">result</span>
+</code></pre></div><h2 id="bm46-最小的k个数">BM46 最小的K个数</h2>
+<p>最简单的一题（x</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">GetLeastNumbers_Solution</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="kn">import</span> <span class="nn">heapq</span>
+        <span class="k">return</span> <span class="n">heapq</span><span class="o">.</span><span class="n">nsmallest</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span>
+</code></pre></div><p>其实和 <code>sorted(input)[:k]</code> 没什么区别😂</p>
+<h2 id="bm47-寻找第k大">BM47 寻找第K大</h2>
+<p>上面搞错了，这才是最简单的一题（x</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">findKth</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="p">)[</span><span class="o">-</span><span class="n">K</span><span class="p">]</span>
+</code></pre></div><p>试着写了一下题解快速排序的代码，结果第8个测试用例超出限制了……所以不要浪费生命，less is more！</p>
+<h2 id="bm48-数据流中的中位数">BM48 数据流中的中位数</h2>
+<p>依然是考察堆排序。准备一个大顶堆存放小元素，一个小顶堆存放大元素，并且保持大顶堆所有元素都小于小顶堆所有元素。显然中位数必然在这两个队的队顶元素之间。添加元素时，可以先加入大堆，再从大堆取出最大值加入小堆（为了维持相对大小关系），也可以反过来。</p>
+<p>注意 Python 里没有最大堆，所以放入和取出最大堆元素的时候都加了负号。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">heapq</span>
+<span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_h</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">Insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_h</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_h</span><span class="p">):</span> <span class="c1"># 两堆相等，优先加入小堆</span>
+            <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_h</span><span class="p">,</span> <span class="o">-</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappushpop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_h</span><span class="p">,</span> <span class="o">-</span><span class="n">num</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># 加入大堆</span>
+            <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_h</span><span class="p">,</span> <span class="o">-</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappushpop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_h</span><span class="p">,</span> <span class="n">num</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">GetMedian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_h</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_h</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_h</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div><h2 id="bm49-表达式求值">BM49 表达式求值</h2>
+<p>刷新了中等题的难度下限（x</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></pre></div><p>还是认真做一下吧，题解的方法像在写有限状态机：</p>
+<ol>
+<li>准备两个栈，一个放操作数，一个放运算符。为了兼顾第一个字符为 +- 的情形，操作数的栈中先放个 0；</li>
+<li>顺序扫描字符串，如果是数字，继续读取，直到第一个不是数字的字符为止，把数字压入操作数栈；</li>
+<li>如果是左括号，压入运算符栈；</li>
+<li>如果是右括号，对操作数和运算符进行出栈计算，然后把结果压入操作数栈，这个动作一直持续到操作数栈栈顶元素为左括号为止，左括号出栈；</li>
+<li>如果是操作符，则和前一个操作符的运算优先级进行比较，如果小于等于前一个操作符的优先级，则出栈进行计算，一直持续到前一个操作符优先级小于当前操作符优先级为止，或者运算符栈为空；</li>
+<li>操作符还有另一种情况：(+,+- 这种两个运算符相连的情形（前一个可以是括号），此时为了处理方便，需要给操作数栈插入一个 0；</li>
+<li>对于其他的情形（比如空格），直接跳过，遍历完成后计算并返回结果。</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">nums</span><span class="p">,</span> <span class="n">ops</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">s_len</span><span class="p">,</span> <span class="n">last_is_ops</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="kc">True</span>
+        <span class="n">prior</span><span class="p">,</span> <span class="n">allnum</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;+&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="nb">set</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;+&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">}</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s_len</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">allnum</span><span class="p">:</span> <span class="c1"># 可能有多位数字</span>
+                <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s_len</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">allnum</span><span class="p">:</span>
+                    <span class="n">num</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">nums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+                <span class="n">i</span><span class="p">,</span> <span class="n">last_is_ops</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;(&#39;</span><span class="p">:</span> <span class="c1"># 出现左括号</span>
+                <span class="n">ops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">last_is_ops</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;)&#39;</span><span class="p">:</span> <span class="c1"># 出现右括号，出栈并计算结果，last_is_ops==False 保持不变</span>
+                <span class="k">while</span> <span class="n">ops</span> <span class="ow">and</span> <span class="n">ops</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;(&#39;</span><span class="p">:</span>
+                    <span class="n">nums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">[</span><span class="n">ops</span><span class="o">.</span><span class="n">pop</span><span class="p">()](</span><span class="n">nums</span><span class="o">.</span><span class="n">pop</span><span class="p">(),</span> <span class="n">nums</span><span class="o">.</span><span class="n">pop</span><span class="p">()))</span>
+                <span class="n">ops</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">prior</span><span class="p">:</span> <span class="c1"># 出现运算符，如果优先级&lt;=上一个，对上一个运算符进行计算</span>
+                <span class="k">if</span> <span class="n">last_is_ops</span><span class="p">:</span> <span class="c1"># 处理 (+, +- 这种特殊情形</span>
+                    <span class="n">nums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">while</span> <span class="n">ops</span> <span class="ow">and</span> <span class="n">ops</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;(&#39;</span> <span class="ow">and</span> <span class="n">prior</span><span class="p">[</span><span class="n">ops</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="n">prior</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]:</span>
+                    <span class="n">nums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">[</span><span class="n">ops</span><span class="o">.</span><span class="n">pop</span><span class="p">()](</span><span class="n">nums</span><span class="o">.</span><span class="n">pop</span><span class="p">(),</span> <span class="n">nums</span><span class="o">.</span><span class="n">pop</span><span class="p">()))</span>
+                <span class="n">ops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">last_is_ops</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">ops</span><span class="p">:</span> <span class="c1"># 把剩余的计算完，一般只剩下 a+b*c,a-b*c</span>
+            <span class="n">nums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">[</span><span class="n">ops</span><span class="o">.</span><span class="n">pop</span><span class="p">()](</span><span class="n">nums</span><span class="o">.</span><span class="n">pop</span><span class="p">(),</span> <span class="n">nums</span><span class="o">.</span><span class="n">pop</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="n">nums</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div><p>写了 30 行代码，感觉像过了半个世纪😂</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://c4rla.github.io/roll/tags/oj/">OJ</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    <script
+    src="https://giscus.app/client.js"
+    data-repo="c4rla/roll"
+    data-repo-id="R_kgDOHFDxiw"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOHFDxi84COtuG"
+    data-mapping="pathname"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-theme="light"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector('iframe.giscus-frame');
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                { 
+                    giscus: {
+                        setConfig: { 
+                            theme: theme 
+                        }
+                    }
+                },
+                "https://giscus.app"
+            );
+        };
+    };
+
+    (function(){
+        addEventListener('message', (e) => {
+            if (event.origin !== 'https://giscus.app') return;
+            handler()
+        });
+        window.addEventListener('onColorSchemeChange', handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark_dimmed');
+            };
+        };
+    }());
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 卷心菜
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.8.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#bm42-用两个栈实现队列">BM42 用两个栈实现队列</a></li>
+    <li><a href="#bm43-包含min函数的栈">BM43 包含min函数的栈</a></li>
+    <li><a href="#bm44-有效括号序列">BM44 有效括号序列</a></li>
+    <li><a href="#bm45-滑动窗口的最大值">BM45 滑动窗口的最大值</a></li>
+    <li><a href="#bm46-最小的k个数">BM46 最小的K个数</a></li>
+    <li><a href="#bm47-寻找第k大">BM47 寻找第K大</a></li>
+    <li><a href="#bm48-数据流中的中位数">BM48 数据流中的中位数</a></li>
+    <li><a href="#bm49-表达式求值">BM49 表达式求值</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="https://c4rla.github.io/roll/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

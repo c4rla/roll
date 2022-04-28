@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on 卷心菜</title>
+    <link>https://c4rla.github.io/roll/post/</link>
+    <description>Recent content in Posts on 卷心菜</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 16 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://c4rla.github.io/roll/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>做题笔记08：剑指Offer</title>
+      <link>https://c4rla.github.io/roll/p/oj-08/</link>
+      <pubDate>Sat, 16 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://c4rla.github.io/roll/p/oj-08/</guid>
+      <description>咕咕咕</description>
+    </item>
+    
+    <item>
+      <title>做题笔记07：字符串/双指针/贪心算法/模拟</title>
+      <link>https://c4rla.github.io/roll/p/oj-07/</link>
+      <pubDate>Wed, 13 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://c4rla.github.io/roll/p/oj-07/</guid>
+      <description>BM83 字符串变形 感恩 Python！ class Solution: def trans(self , s: str, n: int) -&amp;gt; str: return &amp;#39; &amp;#39;.join(s.swapcase().split(&amp;#39; &amp;#39;)[::-1]) BM84 最长公共前缀 class Solution: def longestCommonPrefix(self , strs: List[str]) -&amp;gt; str: res = &amp;#34;&amp;#34; for e in zip(*strs): if len(set(e)) == 1: res += e[0] else: break return res BM85 验证IP地</description>
+    </item>
+    
+    <item>
+      <title>做题笔记06：动态规划</title>
+      <link>https://c4rla.github.io/roll/p/oj-06/</link>
+      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://c4rla.github.io/roll/p/oj-06/</guid>
+      <description>BM62 斐波那契数列 首先想到的自然是递推法： class Solution: def Fibonacci(self , n: int) -&amp;gt; int: F_n_pre, F_n = 0, 1 # F_0, F_1 for _ in range(n - 1): F_n, F_n_pre = F_n + F_n_pre, F_n return F_n 不过，使用一点线性代数的知识： $$ \left[\begin{array}{c} F_2\newline F_1</description>
+    </item>
+    
+    <item>
+      <title>做题笔记05：哈希/递归/回溯</title>
+      <link>https://c4rla.github.io/roll/p/oj-05/</link>
+      <pubDate>Thu, 07 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://c4rla.github.io/roll/p/oj-05/</guid>
+      <description>BM50 两数之和 LeetCode 第一题，梦开始的地方，使用字典作为缓存： class Solution: def twoSum(self , numbers: List[int], target: int) -&amp;gt; List[int]: cache = {} for i in range(len(numbers)): if target - numbers[i] in cache: return [cache[target - numbers[i]] + 1, i + 1] else: cache[numbers[i]] = i return [] 不过按照题</description>
+    </item>
+    
+    <item>
+      <title>做题笔记04：堆/栈/队列</title>
+      <link>https://c4rla.github.io/roll/p/oj-04/</link>
+      <pubDate>Wed, 06 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://c4rla.github.io/roll/p/oj-04/</guid>
+      <description>BM42 用两个栈实现队列 栈相当于把队列的一部分元素以相反的方向存储，再使用一个栈把所有元素的顺序反过来就是队列。等队列栈空了，就再做一次相同的事情</description>
+    </item>
+    
+    <item>
+      <title>做题笔记03：二叉树</title>
+      <link>https://c4rla.github.io/roll/p/oj-03/</link>
+      <pubDate>Sun, 03 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://c4rla.github.io/roll/p/oj-03/</guid>
+      <description>BM23 二叉树的前序遍历 继续记模板！ class Solution: def preorderTraversal(self , root: TreeNode) -&amp;gt; List[int]: result = [] self.preOrder(root, result) return result def preOrder(self, root, result): if not root: return None else: result.append(root.val) self.preOrder(root.left, result) self.preOrder(root.right, result) BM24 二叉树的中序遍历 直接使用递归超出系统限制了，虽</description>
+    </item>
+    
+    <item>
+      <title>做题笔记02：二分查找/排序</title>
+      <link>https://c4rla.github.io/roll/p/oj-02/</link>
+      <pubDate>Sat, 02 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://c4rla.github.io/roll/p/oj-02/</guid>
+      <description>BM17 二分查找-I 学习套模版（闭区间搜索），这个模版还可以用于有重复数字时搜索左侧和右侧边界（只要修改 target == nums[mid] 即可）。 class Solution: def search(self , nums: List[int], target: int) -&amp;gt; int: left, right =</description>
+    </item>
+    
+    <item>
+      <title>做题笔记01：链表</title>
+      <link>https://c4rla.github.io/roll/p/oj-01/</link>
+      <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://c4rla.github.io/roll/p/oj-01/</guid>
+      <description>BM1 反转链表 把链表第一个结点变成最后一个（node.next=null），前往下一个结点； 把该结点的 next 改成前一个结点； 继续前往下一个结点，直到</description>
+    </item>
+    
+    <item>
+      <title>运维笔记01：Linux 基础</title>
+      <link>https://c4rla.github.io/roll/p/devops-01/</link>
+      <pubDate>Sun, 27 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://c4rla.github.io/roll/p/devops-01/</guid>
+      <description>要好好准备找工作！ Linux 简介 历史 在计算机刚发明的年代，由于计算机造价昂贵，人们希望能高效利用宝贵的上机时间，于是分时操作系统诞生了。当时的计算机</description>
+    </item>
+    
+  </channel>
+</rss>

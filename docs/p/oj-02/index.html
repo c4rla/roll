@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Knuth：「没有人比我更懂二分查找！」'><title>做题笔记02：二分查找/排序</title>
+
+<link rel='canonical' href='https://c4rla.github.io/roll/p/oj-02/'>
+
+<link rel="stylesheet" href="https://c4rla.github.io/roll/scss/style.min.b949db8bead9abdc40291b93383b8da6abc3aa62e74f5580356c06ddbb792dab.css"><meta property='og:title' content='做题笔记02：二分查找/排序'>
+<meta property='og:description' content='Knuth：「没有人比我更懂二分查找！」'>
+<meta property='og:url' content='https://c4rla.github.io/roll/p/oj-02/'>
+<meta property='og:site_name' content='卷心菜'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='OJ' /><meta property='article:published_time' content='2022-04-02T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-04-02T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="做题笔记02：二分查找/排序">
+<meta name="twitter:description" content="Knuth：「没有人比我更懂二分查找！」">
+    <link rel="shortcut icon" href="https://c4rla.github.io/roll/img/favicon.png" />
+<style type="text/css">
+    .site-info {text-align: center;}
+    .site-info > figure.site-avatar {margin: 0 auto var(--sidebar-element-separation);}
+     
+     
+    @media (min-width: 768px) {.container .left-sidebar {width: 100%;}}
+    blockquote.quote {position: relative; margin: 1.5em -10em 0 -10; padding-left: 18%; padding-right: 15%; border: none; background-color: transparent}
+    blockquote.quote::before {position: absolute; left: 7%; content: '“'; color: var(--color-contrast-low); font-family: serif; font-size: 3em; font-weight: 700; line-height: 1}
+    blockquote cite {display: block; text-align: right;}
+    .article-content>p:not(.no-text) {overflow-x: auto; overflow-y: hidden;}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="https://c4rla.github.io/roll/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="https://c4rla.github.io/roll/p/oj-02/">做题笔记02：二分查找/排序</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        Knuth：「没有人比我更懂二分查找！」
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2022年4月2日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="bm17-二分查找-i">BM17 二分查找-I</h2>
+<p>学习套模版（闭区间搜索），这个模版还可以用于有重复数字时搜索左侧和右侧边界（只要修改 target == nums[mid] 即可）。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1"># 使用闭区间 [0, length-1] 做二分查找</span>
+        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span> <span class="c1"># 因为是闭区间，终止条件为 left&gt;right 即 [left, right] 为空</span>
+            <span class="n">mid</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="c1"># 模版的防溢出，虽然 Python 不用管</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="n">mid</span>
+            <span class="k">elif</span> <span class="n">target</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span> <span class="c1"># 搜索区间改为 [mid+1, length-1]</span>
+                <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span> <span class="c1"># 搜索区间改为 [0, mid-1]</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># 没找到结果</span>
+</code></pre></div><h2 id="bm18-二维数组中的查找">BM18 二维数组中的查找</h2>
+<p>左上角是最小的数，右下角是最大的数，假如从左上角开始，如果 target 比左上角的数大，就有两条可能的路径。虽然不是不能做，但有没有更简单的做法？</p>
+<p>数组中有两个特殊的位置只有一条路径：右上角和左下角。如果以右上角作为顶点，每个元素的左元素和下元素作为子结点，不难看到这是一棵二叉搜索树。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">Find</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1"># i 是纵坐标， j 是横坐标，从右上角开始</span>
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="ow">and</span> <span class="n">target</span> <span class="o">!=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]:</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">target</span> <span class="o">&gt;</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">))</span>
+</code></pre></div><h2 id="bm19-寻找峰值">BM19 寻找峰值</h2>
+<p>很无聊的一道题，为了使用二分查找生造出来的感觉……</p>
+<p>出发点大概是，注意到如果中间元素比右边元素大，则中间元素可能是峰值，如果不是，中间元素的左边一定比中间元素大，也可能是峰值……如果最左边元素是最大值然后一直递减，按照题目的条件，最左边元素也算是峰值，因此一定有峰值在 [0, mid] 之间。同理，如果中间元素比右边元素小，一定有峰值在 [mid+1, length-1]：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">findPeakElement</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
+            <span class="n">mid</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span> <span class="c1"># 搜索区间变成 [0, mid]</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># 搜索区间变成 [mid + 1, length-1]</span>
+                <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">right</span> <span class="c1"># 区间一直在收缩，直到 left == right</span>
+</code></pre></div><h2 id="bm20-数组中的逆序对">BM20 数组中的逆序对</h2>
+<p>终于遇到第一道真正意义上的难题😭</p>
+<h3 id="方法一归并排序credit剑指offer">方法一：归并排序（Credit：《剑指Offer》）</h3>
+<p>最容易想到的计算方式是按定义计算，如 {7,5,6,4} 的步骤如下：</p>
+<ol>
+<li>把 7 和结果中的数比较（{}），逆序数为 0，放入结果中；</li>
+<li>把 5 和结果中的数比较（{7}），逆序数为 1，放入结果中；</li>
+<li>把 6 和结果中的数比较（{7,5}），逆序数为 1，放入结果中；</li>
+<li>把 4 和结果中的数比较（{7,5,6}），逆序数为 3，放入结果中；</li>
+<li>结束，总的逆序数为 0+1+1+3=5。</li>
+</ol>
+<p>显然直接计算方法的时间复杂度为 O(n^2)，不能满足题目要求，有没有别的方法呢？试试采用分治法，比如归并排序：</p>
+<ol>
+<li>把 {7,5,6,4} 依次划分成最小的部分，即 {7},{5},{6},{4}；</li>
+<li>尝试合并：{7}{5} 比较最后一位的大小，因为 7&gt;5，逆序数为 1，按顺序合成 {5,7}；{6}{4} 比较最后一位的大小，因为 6&gt;4，逆序数为 1，按顺序整理成 {4,6}；</li>
+<li>接下来需要比较 {5,7} 和 {4,6} 的逆序数，首先比较最后一位，因为 7&gt;6，即 {4,6} 所有数都比 7 小，逆序数 +2，结果放入 {7}，指针左移；</li>
+<li>指针左移后，比较的是 {5,6} 的大小，因为 5&lt;6，逆序数为 0，把 6 放入结果中，变成 {6,7}，指针左移；</li>
+<li>以此类推，现在比较的是 {5,4} 的大小，因为 5&gt;4，逆序数为 1，把 5 放入结果中，变成 {5,6,7}，指针左移；</li>
+<li>最后把 {4} 放入结果中即可，逆序数为 1+1+2+0+1=5。</li>
+</ol>
+<p><img src="https://c4rla.github.io/roll/p/oj-02/merge_sort.jpeg"
+	width="1080"
+	height="988"
+	
+	loading="lazy"
+	
+		alt="《剑指 Offer》面试题 51"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="109"
+		data-flex-basis="262px"
+	
+></p>
+<p>讨厌递归……参考了题解的代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">InversePairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">MergeSort</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="mi">1000000007</span>
+    
+    <span class="k">def</span> <span class="nf">MergeSort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+        <span class="c1"># 返回排好序的数据和逆序数</span>
+        <span class="c1"># 1. 先写退出条件，即只有 0 个或一个元素的情形</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># 2. 寻找中点，把数组切割成两部分</span>
+            <span class="n">mid</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="n">left</span><span class="p">,</span> <span class="n">left_inverse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MergeSort</span><span class="p">(</span><span class="n">data</span><span class="p">[:</span><span class="n">mid</span><span class="p">])</span>
+            <span class="n">right</span><span class="p">,</span> <span class="n">right_inverse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MergeSort</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mid</span><span class="p">:])</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">count_inverse</span> <span class="o">=</span> <span class="n">left_inverse</span> <span class="o">+</span> <span class="n">right_inverse</span>
+            <span class="c1"># 3. 开始进行归并排序</span>
+            <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="ow">and</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">left</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">[</span><span class="n">r</span><span class="p">]:</span> <span class="c1"># 左边 &lt; 右边，逆序数为 0</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">l</span><span class="p">])</span>
+                    <span class="n">l</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span> <span class="c1"># 左边 &gt; 右边，逆序数为左边指针右边所有元素个数（含）</span>
+                    <span class="n">count_inverse</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">-</span> <span class="n">l</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">right</span><span class="p">[</span><span class="n">r</span><span class="p">])</span>
+                    <span class="n">r</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">left</span><span class="p">[</span><span class="n">l</span><span class="p">:]</span> <span class="o">+</span> <span class="n">right</span><span class="p">[</span><span class="n">r</span><span class="p">:]</span> <span class="c1"># 比较结束，接上剩下的元素</span>
+            <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">count_inverse</span>
+</code></pre></div><h3 id="方法二快速排序credit题解">方法二：快速排序（Credit：题解）</h3>
+<p>同样是分治策略，既然可以用归并，那么能不能用快排？也是可以的，因为逆序数本质上是比较所有的两两组合，快速排序的时候，首先选择主元（第一个元素），然后把所有数分成大于主元和小于主元两个独立部分，此时就完成了：</p>
+<ol>
+<li>主元和所有其他元素的比较；</li>
+<li>大于主元的元素与小于主元的元素的逐一相互比较，准确的说，是所有比主元小的元素，和排在该元素前面且大于主元的元素进行比较（为什么相等？因为求的是逆序数）。</li>
+</ol>
+<p>于是接下来只需要递归地对大于主元和小于主元的元素分别执行相同操作即可。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">InversePairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">QuickSort</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1000000007</span>
+    
+    <span class="k">def</span> <span class="nf">QuickSort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+        <span class="c1"># 同样先写退出条件</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bigger</span><span class="p">,</span> <span class="n">smaller</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+            <span class="n">count_inverse</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">pivot</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="p">:</span>
+                    <span class="n">bigger</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">smaller</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+                    <span class="n">count_inverse</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bigger</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="n">count_inverse</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">QuickSort</span><span class="p">(</span><span class="n">bigger</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">QuickSort</span><span class="p">(</span><span class="n">smaller</span><span class="p">)</span>
+</code></pre></div><h3 id="扩展树状数组线段树">扩展：树状数组/线段树</h3>
+<p><del>顾名思义，树状数组就是长得像树一样的数组！</del></p>
+<p><img src="https://c4rla.github.io/roll/p/oj-02/BIT.jpg"
+	width="455"
+	height="213"
+	
+	loading="lazy"
+	
+		alt="Credit: OI Wiki"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="213"
+		data-flex-basis="512px"
+	
+></p>
+<p>树状数组的优点是可以以对数时间复杂度获得元素固定的数列前 N 项的和（其实任意区间的和都可以），这和逆序数有什么关系呢？</p>
+<p>回顾最开始的做法，我们从左到右求出每个数之前比它大的数的个数，累加起来就是答案。如果存在某种能以 O(log(n)) 时间复杂度计算出“比它大的数的个数”的数据结构，时间复杂度就降到 O(nlog(n)) 了：</p>
+<ol>
+<li>遍历数组，了解数组中所有元素的取值范围，假设取值范围为 0&lt;=x&lt;=1000，新建一个长度为 1001 的树状数组，把所有元素初始成 0。这个树状数组用于存储到目前为止每个数出现的次数。其实也有不同的做法，比如有的人会对数组中的元素进行排序，并重新编号，称为 <a class="link" href="https://oi-wiki.org/misc/discrete/"  target="_blank" rel="noopener"
+    >离散化</a>；</li>
+<li>读取第一个元素 a，把树状数组中 a 对应的数据 +1（O(log(n))）；</li>
+<li>此时计算树状数组中 [0, a] 区间的和（O(log(n))），这个和表示目前为止的数组元素中 &lt;= a 的元素个数，使用当前的位置 1 减去它，就得到此元素的逆序数；</li>
+<li>遍历数组所有元素，把所有逆序数加起来，就得到了答案。</li>
+</ol>
+<p>树状数组和线段树的实现代码可以参考 <a class="link" href="https://oi-wiki.org/ds/fenwick/"  target="_blank" rel="noopener"
+    >OI Wiki</a>，<del>既然记不住，应该不会考吧……</del></p>
+<h2 id="bm21-旋转数组的最小数字">BM21 旋转数组的最小数字</h2>
+<p>和 BM19 类似，也是为了考察二分查找造出来的题，假设数组由 AB 变成 BA：</p>
+<ol>
+<li>假设数据为 [3,4,5,1,2]，首先确定 left=3, mid=5, right=2；</li>
+<li>因为 mid &gt; right，数组是非降的，故 mid 一定在 B，right 一定在 A，最小值一定在 [mid+1, right] 中。更新区间进行二分查找；</li>
+<li>同理，如果 mid &lt; right，说明 mid 和 right 都在 A 中，最小值是 B 和 A 的交界点（A 的第一个元素），故一定在 [left, mid] 中，更新区间进行二分查找；</li>
+<li>最后，如果 mid == right，因为数组是非降的，可以肯定 right 一定不是最小值，故搜索区间改为 [left, right-1]；</li>
+<li>区间不断缩小，当 left == right 时返回结果。</li>
+</ol>
+<p>依然是套模板：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">minNumberInRotateArray</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">rotateArray</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rotateArray</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rotateArray</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
+            <span class="n">mid</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">rotateArray</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">rotateArray</span><span class="p">[</span><span class="n">right</span><span class="p">]:</span> <span class="c1"># [mid+1, right]</span>
+                <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">rotateArray</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">rotateArray</span><span class="p">[</span><span class="n">right</span><span class="p">]:</span> <span class="c1"># [left, mid]</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span>
+            <span class="k">elif</span> <span class="n">rotateArray</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">==</span> <span class="n">rotateArray</span><span class="p">[</span><span class="n">right</span><span class="p">]:</span> <span class="c1"># [left, right-1]</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">right</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">rotateArray</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
+</code></pre></div><h2 id="bm22-比较版本号">BM22 比较版本号</h2>
+<p>感恩 Python！</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">version1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">version1</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">version1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)]</span>
+        <span class="n">version2</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">version2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)]</span>
+        <span class="c1"># 因为 Python 中 [1,0] &lt; [1,0,0]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">version1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">version2</span><span class="p">):</span>
+            <span class="n">version2</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">version1</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">version2</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">version1</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">version2</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">version1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">version1</span> <span class="o">&lt;</span> <span class="n">version2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">version1</span> <span class="o">==</span> <span class="n">version2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+</code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://c4rla.github.io/roll/tags/oj/">OJ</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    <script
+    src="https://giscus.app/client.js"
+    data-repo="c4rla/roll"
+    data-repo-id="R_kgDOHFDxiw"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOHFDxi84COtuG"
+    data-mapping="pathname"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-theme="light"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector('iframe.giscus-frame');
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                { 
+                    giscus: {
+                        setConfig: { 
+                            theme: theme 
+                        }
+                    }
+                },
+                "https://giscus.app"
+            );
+        };
+    };
+
+    (function(){
+        addEventListener('message', (e) => {
+            if (event.origin !== 'https://giscus.app') return;
+            handler()
+        });
+        window.addEventListener('onColorSchemeChange', handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark_dimmed');
+            };
+        };
+    }());
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 卷心菜
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.8.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#bm17-二分查找-i">BM17 二分查找-I</a></li>
+    <li><a href="#bm18-二维数组中的查找">BM18 二维数组中的查找</a></li>
+    <li><a href="#bm19-寻找峰值">BM19 寻找峰值</a></li>
+    <li><a href="#bm20-数组中的逆序对">BM20 数组中的逆序对</a>
+      <ol>
+        <li><a href="#方法一归并排序credit剑指offer">方法一：归并排序（Credit：《剑指Offer》）</a></li>
+        <li><a href="#方法二快速排序credit题解">方法二：快速排序（Credit：题解）</a></li>
+        <li><a href="#扩展树状数组线段树">扩展：树状数组/线段树</a></li>
+      </ol>
+    </li>
+    <li><a href="#bm21-旋转数组的最小数字">BM21 旋转数组的最小数字</a></li>
+    <li><a href="#bm22-比较版本号">BM22 比较版本号</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="https://c4rla.github.io/roll/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

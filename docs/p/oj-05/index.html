@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='从前有座⛰️'><title>做题笔记05：哈希/递归/回溯</title>
+
+<link rel='canonical' href='https://c4rla.github.io/roll/p/oj-05/'>
+
+<link rel="stylesheet" href="https://c4rla.github.io/roll/scss/style.min.b949db8bead9abdc40291b93383b8da6abc3aa62e74f5580356c06ddbb792dab.css"><meta property='og:title' content='做题笔记05：哈希/递归/回溯'>
+<meta property='og:description' content='从前有座⛰️'>
+<meta property='og:url' content='https://c4rla.github.io/roll/p/oj-05/'>
+<meta property='og:site_name' content='卷心菜'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='OJ' /><meta property='article:published_time' content='2022-04-07T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-04-07T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="做题笔记05：哈希/递归/回溯">
+<meta name="twitter:description" content="从前有座⛰️">
+    <link rel="shortcut icon" href="https://c4rla.github.io/roll/img/favicon.png" />
+<style type="text/css">
+    .site-info {text-align: center;}
+    .site-info > figure.site-avatar {margin: 0 auto var(--sidebar-element-separation);}
+     
+     
+    @media (min-width: 768px) {.container .left-sidebar {width: 100%;}}
+    blockquote.quote {position: relative; margin: 1.5em -10em 0 -10; padding-left: 18%; padding-right: 15%; border: none; background-color: transparent}
+    blockquote.quote::before {position: absolute; left: 7%; content: '“'; color: var(--color-contrast-low); font-family: serif; font-size: 3em; font-weight: 700; line-height: 1}
+    blockquote cite {display: block; text-align: right;}
+    .article-content>p:not(.no-text) {overflow-x: auto; overflow-y: hidden;}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="https://c4rla.github.io/roll/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="https://c4rla.github.io/roll/p/oj-05/">做题笔记05：哈希/递归/回溯</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        从前有座⛰️
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2022年4月7日</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 8 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="bm50-两数之和">BM50 两数之和</h2>
+<p>LeetCode 第一题，梦开始的地方，使用字典作为缓存：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">twoSum</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">numbers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">numbers</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">-</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">cache</span><span class="p">[</span><span class="n">target</span> <span class="o">-</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cache</span><span class="p">[</span><span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">return</span> <span class="p">[]</span>
+</code></pre></div><p>不过按照题目的要求，大概是希望把数组排序后使用双指针（以时间换空间）：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">twoSum</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">numbers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">numbers</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">((</span><span class="n">num</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">numbers</span><span class="p">))</span>
+        <span class="k">while</span> <span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="p">:</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="n">numbers</span><span class="p">[</span><span class="n">lo</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">numbers</span><span class="p">[</span><span class="n">hi</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">total</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">:</span>
+                <span class="n">lo</span> <span class="o">=</span> <span class="n">lo</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="n">target</span><span class="p">:</span>
+                <span class="n">hi</span> <span class="o">=</span> <span class="n">hi</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">numbers</span><span class="p">[</span><span class="n">lo</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">numbers</span><span class="p">[</span><span class="n">hi</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="p">[]</span>
+</code></pre></div><h2 id="bm51-数组中出现次数超过一半的数字">BM51 数组中出现次数超过一半的数字</h2>
+<p>这是剑指 Offer 面试题 39，方法非常多，比如使用字典保存每个数的出现次数，又比如使用类似快速排序的分治法，另外注意到数组中出现超过一半的数字，一定是数组的中位数，还可以使用二叉堆、红黑树等高级数据结构，不过都无法满足题目时间复杂度 O(n)，空间复杂度 O(1) 的要求。</p>
+<p>有没有办法再简化一下呢，比如不使用字典？假如只保存一个数和对应的出现次数，仍然有办法找出出现次数超过一半的数吗？其实也是可以的：</p>
+<ol>
+<li>记录下当前的数字，出现次数设置为 1；</li>
+<li>如果下一个数字相等，出现次数+1，否则 -1；</li>
+<li>出现次数为 0 时，更换下一个数字。</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">MoreThanHalfNum_Solution</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">numbers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">num</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">times</span><span class="p">:</span>
+                <span class="n">num</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="n">num</span><span class="p">:</span>
+                <span class="n">times</span> <span class="o">=</span> <span class="n">times</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">times</span> <span class="o">=</span> <span class="n">times</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">num</span>
+</code></pre></div><p>理解这个算法比较快的方法大概是尝试构造一个反例，为了让出现次数超过一半的数字 num 且不被记录下来，只能是这种形式 [a, num, b, num, c, num, ..., y, num(, z)]，但与 num 出现次数超过一半矛盾。</p>
+<h2 id="bm52-数组中只出现一次的两个数字">BM52 数组中只出现一次的两个数字</h2>
+<p>需要使用异或的技巧：</p>
+<ul>
+<li>0 xor a = a, a xor a = 0</li>
+<li>a xor b = b xor a</li>
+<li>a xor b = c, c xor a = b, c xor b = a</li>
+</ul>
+<p>可以看到异或不同数的时候像做加法，异或相同数像在做减法。如果数组中只有一个数字只出现一次，只要把数组全部数异或一次就能得到结果。</p>
+<p>本题中因为有两个数 a,b，把全部数异或只能得到 a xor b。如果能把所有数分成两组，让 a,b 各自和组内其他数进行异或，问题就解决了。注意到异或后为 1 的位是两个数不同的位，不难写出代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">FindNumsAppearOnce</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="c1"># 1. 计算所有数的异或和</span>
+        <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
+        <span class="n">axorb</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">:</span> <span class="n">a</span><span class="o">^</span><span class="n">b</span><span class="p">,</span> <span class="n">array</span><span class="p">)</span>
+        <span class="c1"># 2. 寻找从最右边开始第一位为1对应的数字，如 6-&gt;110-&gt;10-&gt;2，这里使用了位运算技巧</span>
+        <span class="n">lowbit</span> <span class="o">=</span> <span class="n">axorb</span> <span class="o">&amp;</span> <span class="o">-</span><span class="n">axorb</span>
+        <span class="c1"># 3. 分组再次求异或和</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">array</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">num</span> <span class="o">&amp;</span> <span class="n">lowbit</span><span class="p">:</span> <span class="c1"># 对应位为 1</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">^</span> <span class="n">num</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># 对应位为 0</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">^</span> <span class="n">num</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">])</span>
+</code></pre></div><h2 id="bm53-缺失的第一个正整数">BM53 缺失的第一个正整数</h2>
+<p>很自然想到使用字典，然而题目不允许，怎么办呢？能不能直接在数组中记录某个正数是否出现的信息？于是学会了新技巧——原地哈希：</p>
+<ol>
+<li>首先把所有负数和 0 设置为 n+1；</li>
+<li>顺序遍历数组，如果 1-n 中某个数字 k 出现过，就把数组第 k 个元素设置为负数（记得要-1，k也有可能是负数，记得取绝对值）；</li>
+<li>顺序遍历数组，第一个正数对应的索引就是所求的数（记得要+1）；</li>
+<li>如果没找到正数，说明数组中的数恰好为 1-n，返回 n+1。</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">minNumberDisappeared</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+        <span class="c1"># 1. 把所有负数和 0 替换成 n+1，此时数列全是正数</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1"># 2. 把出现过的数作为下标对应的数变成负数，此时数组的数为 [1, ...] 对应的下标则是 [0, n-1]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">:</span>
+                <span class="n">nums</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># 3. 找到第一个正数对应的数组下标</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+</code></pre></div><h2 id="bm54-三数之和">BM54 三数之和</h2>
+<p>既然是三个数，遍历所有二元组就需要 O(n^2)，自然会想到先排个序再处理。只要写出两数之和的双指针版本，再加一个指针就是三数之和了，同理可以推广至 nSum，只需要注意跳转的时候要跳到下一个不同的数。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">threeSum</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">nums</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">low</span><span class="p">,</span> <span class="n">mid</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="n">low</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">mid</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">nums</span><span class="p">[</span><span class="n">low</span><span class="p">]:</span> <span class="c1"># mid 跳到下一个数，0 可以换成 target</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span>
+                    <span class="k">while</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">==</span> <span class="n">tmp</span> <span class="ow">and</span> <span class="n">mid</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">:</span>
+                        <span class="n">mid</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">nums</span><span class="p">[</span><span class="n">low</span><span class="p">]:</span> <span class="c1"># high 跳到上一个数</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">high</span><span class="p">]</span>
+                    <span class="k">while</span> <span class="n">nums</span><span class="p">[</span><span class="n">high</span><span class="p">]</span> <span class="o">==</span> <span class="n">tmp</span> <span class="ow">and</span> <span class="n">mid</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">:</span>
+                        <span class="n">high</span> <span class="o">=</span> <span class="n">high</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">nums</span><span class="p">[</span><span class="n">low</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">high</span><span class="p">]])</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span>
+                    <span class="k">while</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">==</span> <span class="n">tmp</span> <span class="ow">and</span> <span class="n">mid</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">:</span>
+                        <span class="n">mid</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">high</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">low</span><span class="p">]</span> <span class="c1"># low 跳到下一个数</span>
+            <span class="k">while</span> <span class="n">nums</span><span class="p">[</span><span class="n">low</span><span class="p">]</span> <span class="o">==</span> <span class="n">tmp</span> <span class="ow">and</span> <span class="n">low</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">low</span> <span class="o">=</span> <span class="n">low</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">mid</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">low</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">result</span>
+</code></pre></div><h2 id="bm55-没有重复项数字的全排列">BM55 没有重复项数字的全排列</h2>
+<p>久违的轻松时刻～</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">permute</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">permutations</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">permutations</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">)))</span>
+</code></pre></div><p>其实方法非常多，Donald E. Knuth 在 <em>The Art of Computer Programming</em> 中用 <a class="link" href="https://book.douban.com/subject/1852976/"  target="_blank" rel="noopener"
+    >一整册书</a> 的篇幅讨论了各种排列和元组的生成方法。在文档里可以看到 <code>itertools.permutations</code> 的 <a class="link" href="https://docs.python.org/3/library/itertools.html#itertools.permutations"  target="_blank" rel="noopener"
+    >实现原理</a>，不过 <a class="link" href="https://stackoverflow.com/questions/2565619/algorithm-for-python-itertools-permutations"  target="_blank" rel="noopener"
+    >并不好懂</a>，似乎是使用了 Knuth 书中一种基于置换的算法。</p>
+<p>就算只考虑字典序遍历，相对简单的算法也有很多，比如注意到 1 2 3 的所有排列为：</p>
+<pre tabindex="0"><code>1 23
+1 32
+2 13
+2 31
+3 12
+3 21
+</code></pre><p>即可分解为子问题，不难写出递归代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">permute</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="k">def</span> <span class="nf">perm</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">nums</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">perm</span><span class="p">(</span><span class="n">nums</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:]):</span> <span class="c1"># Slice 没有边界问题</span>
+                        <span class="k">yield</span> <span class="p">[</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+</span> <span class="n">j</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">perm</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">)))</span>
+</code></pre></div><p>从另一个角度看，其实是树的遍历问题（层序），可以使用一个队列来存储上一层的结果：</p>
+<p><img src="https://c4rla.github.io/roll/p/oj-05/tree.png"
+	width="1117"
+	height="451"
+	
+	loading="lazy"
+	
+		alt="Credit: 题解"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="247"
+		data-flex-basis="594px"
+	
+></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">permute</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([[[],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">)]])</span>
+        <span class="k">while</span> <span class="n">queue</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)):</span>
+                <span class="n">prefix</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">suffix</span><span class="p">)):</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">prefix</span> <span class="o">+</span> <span class="p">[</span><span class="n">suffix</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">suffix</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:]])</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">queue</span><span class="p">]</span>
+</code></pre></div><h2 id="bm56-有重复项数字的全排列">BM56 有重复项数字的全排列</h2>
+<p>从生成器的角度思考：如果当前的排列为 (1,2,4,5,3)，下一个排列是什么呢？回顾中序遍历的过程，首先要从后往前找到第一个有右子结点的结点，然后沿着这条路径往左下走，转换成数学的语言：</p>
+<ol>
+<li>从最后一个数字开始往回走，找到第一个下降的数字，作为主元。（为什么？因为主元在“进位”前，后面的数必然达到最大值，故一定是非增序列，结合树的图形会更好理解。）这里 3&lt;5，5&gt;4，所以主元是4；</li>
+<li>主元切换到下一个数字，即 4-&gt;5，此时前三个数字为 {1,2,5}；</li>
+<li>把剩下的数字由小到大排序，即 {4,3} -&gt; {3,4}，再接到后面，即下一个排列为 {1,2,5,3,4}。其实只需交换上面两个数字后，把后半截反过来（因为交换不改变大小次序）。</li>
+</ol>
+<p><img src="https://c4rla.github.io/roll/p/oj-05/next-permutation-algorithm.png"
+	width="600"
+	height="700"
+	
+	loading="lazy"
+	
+		alt="Credit: https://www.nayuki.io/page/next-lexicographical-permutation-algorithm"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="85"
+		data-flex-basis="205px"
+	
+></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">permuteUnique</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">nums</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">),</span> <span class="p">[]</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nums</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">pivot</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="n">pivot</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="n">pivot</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">nums</span><span class="p">[</span><span class="n">pivot</span><span class="p">]:</span>
+                <span class="n">pivot</span> <span class="o">=</span> <span class="n">pivot</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">pivot</span> <span class="o">=</span> <span class="n">pivot</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1"># 循环在 pivot - 1 是主元时停止</span>
+            <span class="k">if</span> <span class="n">pivot</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># 到达最后一个排列，退出循环</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exchange</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1"># 寻找第一个大于 pivot 的元素，此时后面元素非增</span>
+                <span class="k">while</span> <span class="n">nums</span><span class="p">[</span><span class="n">exchange</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">nums</span><span class="p">[</span><span class="n">pivot</span><span class="p">]:</span>
+                    <span class="n">exchange</span> <span class="o">=</span> <span class="n">exchange</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">nums</span><span class="p">[</span><span class="n">pivot</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">exchange</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">exchange</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">pivot</span><span class="p">]</span>
+                <span class="n">nums</span><span class="p">[</span><span class="n">pivot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="n">pivot</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 把后半截反过来</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nums</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">res</span>
+</code></pre></div><p>这个算法历史悠久，据 Knuth 考证似乎最早出现于 14 世纪。还有很多其他的算法，比如 Knuth 的 <a class="link" href="https://guptamukul.blogspot.com/2009/12/understanding-algorithm-l_05.html"  target="_blank" rel="noopener"
+    >Algorithm L</a> ……</p>
+<h2 id="bm57-岛屿数量">BM57 岛屿数量</h2>
+<p>按某种次序（比如从左到右从上到下）访问所有格子：</p>
+<ol>
+<li>如果格子里是 '1'，计数器加1，格子元素设成 '0'；</li>
+<li>此时访问格子上下左右，如果遇到 '1'，设置成 '0'，并且继续访问该格子上下左右；</li>
+<li>如果格子是 '0' 就跳过；</li>
+<li>最后返回计数器的结果。</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">grid</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">grid</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">count</span><span class="p">,</span> <span class="n">queue</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[]</span>
+        <span class="n">inArea</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">row</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">col</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">grid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+                    <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">grid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="k">if</span> <span class="n">inArea</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
+                    <span class="n">e_i</span><span class="p">,</span> <span class="n">e_j</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">grid</span><span class="p">[</span><span class="n">e_i</span><span class="p">][</span><span class="n">e_j</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+                        <span class="n">grid</span><span class="p">[</span><span class="n">e_i</span><span class="p">][</span><span class="n">e_j</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+                        <span class="n">queue</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">e_i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">e_j</span><span class="p">),</span> <span class="p">(</span><span class="n">e_i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">e_j</span><span class="p">),</span> <span class="p">(</span><span class="n">e_i</span><span class="p">,</span> <span class="n">e_j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">e_i</span><span class="p">,</span> <span class="n">e_j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="k">if</span> <span class="n">inArea</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">count</span>
+</code></pre></div><h2 id="bm58-字符串的排列">BM58 字符串的排列</h2>
+<p>和 BM56 基本一致，只要稍微改动一下……感谢 Python🙏🙏</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">Permutation</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">alps</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">string</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">),</span> <span class="p">[]</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">alps</span><span class="p">))</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">pivot</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="n">pivot</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">alps</span><span class="p">[</span><span class="n">pivot</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">alps</span><span class="p">[</span><span class="n">pivot</span><span class="p">]:</span>
+                <span class="n">pivot</span> <span class="o">=</span> <span class="n">pivot</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">pivot</span> <span class="o">=</span> <span class="n">pivot</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1"># 循环在 pivot - 1 是主元时停止</span>
+            <span class="k">if</span> <span class="n">pivot</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># 到达最后一个排列，退出循环</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exchange</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1"># 寻找第一个大于 pivot 的元素，此时后面元素非增</span>
+                <span class="k">while</span> <span class="n">alps</span><span class="p">[</span><span class="n">exchange</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">alps</span><span class="p">[</span><span class="n">pivot</span><span class="p">]:</span>
+                    <span class="n">exchange</span> <span class="o">=</span> <span class="n">exchange</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">alps</span><span class="p">[</span><span class="n">pivot</span><span class="p">],</span> <span class="n">alps</span><span class="p">[</span><span class="n">exchange</span><span class="p">]</span> <span class="o">=</span> <span class="n">alps</span><span class="p">[</span><span class="n">exchange</span><span class="p">],</span> <span class="n">alps</span><span class="p">[</span><span class="n">pivot</span><span class="p">]</span>
+                <span class="n">alps</span><span class="p">[</span><span class="n">pivot</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">alps</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="n">pivot</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 把后半截反过来</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">alps</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">res</span>
+</code></pre></div><h2 id="bm59-n皇后问题">BM59 N皇后问题</h2>
+<p>偷个懒，注意到如果把全排列第 i 个元素 j 的 (i,j) 看成坐标，显然是不同行不同列的，只需要检查是否在相同的对角线上，即检查有没有相同的 i+j 和 i-j。虽然过了，但时间很慢（O(n * n!)）……</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">Nqueen</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">permutations</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)):</span>
+            <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{},</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">i</span><span class="o">+</span><span class="n">j</span> <span class="ow">in</span> <span class="n">left</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">i</span><span class="o">-</span><span class="n">j</span> <span class="ow">in</span> <span class="n">right</span><span class="p">):</span>
+                    <span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">],</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="p">],</span> <span class="n">reg</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">reg</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">reg</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">count</span>
+</code></pre></div><p>比较著名的方法是使用 <a class="link" href="https://zhuanlan.zhihu.com/p/22846106"  target="_blank" rel="noopener"
+    >位运算+递归</a>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">Nqueen</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">def</span> <span class="nf">DFS</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">shu</span><span class="p">,</span> <span class="n">pie</span><span class="p">,</span> <span class="n">na</span><span class="p">):</span> <span class="c1"># 横竖撇捺</span>
+            <span class="k">nonlocal</span> <span class="n">count</span>
+            <span class="n">available</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">shu</span> <span class="o">|</span> <span class="n">pie</span> <span class="o">|</span> <span class="n">na</span><span class="p">)</span> <span class="c1"># 截断 &amp; 取反得到可用位</span>
+            <span class="k">while</span> <span class="n">available</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">available</span> <span class="o">&amp;</span> <span class="o">-</span><span class="n">available</span> <span class="c1"># lowbit 为 1 的最低位</span>
+                <span class="n">available</span> <span class="o">^=</span> <span class="n">p</span> <span class="c1"># 把 lowbit 位置 0</span>
+                <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">DFS</span><span class="p">(</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shu</span> <span class="o">|</span> <span class="n">p</span><span class="p">,</span> <span class="p">(</span><span class="n">pie</span> <span class="o">|</span> <span class="n">p</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">na</span> <span class="o">|</span> <span class="n">p</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">DFS</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">count</span>
+</code></pre></div><h2 id="bm60-括号生成">BM60 括号生成</h2>
+<p>也是树的遍历。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">generateParenthesis</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span> <span class="c1"># (前缀, 剩下的字符数，左括号数, 右括号数)</span>
+        <span class="k">while</span> <span class="n">queue</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">prefix</span><span class="p">,</span> <span class="n">char_left</span><span class="p">,</span> <span class="n">count_left</span><span class="p">,</span> <span class="n">count_right</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">count_left</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="n">char_left</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">count_left</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">count_right</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">count_right</span> <span class="o">&lt;</span> <span class="n">count_left</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="n">char_left</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">count_left</span><span class="p">,</span> <span class="n">count_right</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">queue</span><span class="p">]</span>
+</code></pre></div><h2 id="bm61-矩阵最长递增路径">BM61 矩阵最长递增路径</h2>
+<p>最容易想到的是递归，dfs(x, y) = max(dfs(i, j) for i, j in jobs) + 1：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">lengths</span><span class="p">,</span> <span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">row</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">col</span><span class="p">)],</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">inArea</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">row</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">col</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">DFS</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+            <span class="k">nonlocal</span> <span class="n">lengths</span>
+            <span class="k">if</span> <span class="n">lengths</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">jobs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">dirs</span> <span class="k">if</span> <span class="n">inArea</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="ow">and</span> <span class="n">matrix</span><span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">][</span><span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">matrix</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="p">]</span>
+                <span class="n">lengths</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">DFS</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">jobs</span> <span class="k">else</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="n">lengths</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DFS</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">result</span>
+</code></pre></div><p>又踩到了 Python 一个坑，debug 了足足一个小时：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
+<span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+</code></pre></div><p>也可以看成动态规划或者树的遍历，从最大的数开始一步一步往四周倒着走：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span> <span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">lengths</span><span class="p">,</span> <span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">row</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">col</span><span class="p">)],</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">inArea</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">row</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">col</span><span class="p">)</span>
+        
+        <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">inArea</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="ow">and</span> <span class="n">matrix</span><span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">][</span><span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">matrix</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]:</span>
+                        <span class="n">lengths</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">lengths</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># 四周没有比它大的格子</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)):</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">inArea</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="ow">and</span> <span class="n">matrix</span><span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">][</span><span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">matrix</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]:</span>
+                        <span class="n">lengths</span><span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">][</span><span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">lengths</span><span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">][</span><span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># 次大的格子</span>
+                            <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">j</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">result</span>
+</code></pre></div><p>不写 += -= 过不了测试，奇怪的是<a class="link" href="https://stackoverflow.com/questions/11925429/will-a-1-be-faster-than-a-a1-in-python"  target="_blank" rel="noopener"
+    >差距应该并不明显</a>😂</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://c4rla.github.io/roll/tags/oj/">OJ</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    <script
+    src="https://giscus.app/client.js"
+    data-repo="c4rla/roll"
+    data-repo-id="R_kgDOHFDxiw"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOHFDxi84COtuG"
+    data-mapping="pathname"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-theme="light"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector('iframe.giscus-frame');
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                { 
+                    giscus: {
+                        setConfig: { 
+                            theme: theme 
+                        }
+                    }
+                },
+                "https://giscus.app"
+            );
+        };
+    };
+
+    (function(){
+        addEventListener('message', (e) => {
+            if (event.origin !== 'https://giscus.app') return;
+            handler()
+        });
+        window.addEventListener('onColorSchemeChange', handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark_dimmed');
+            };
+        };
+    }());
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 卷心菜
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.8.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#bm50-两数之和">BM50 两数之和</a></li>
+    <li><a href="#bm51-数组中出现次数超过一半的数字">BM51 数组中出现次数超过一半的数字</a></li>
+    <li><a href="#bm52-数组中只出现一次的两个数字">BM52 数组中只出现一次的两个数字</a></li>
+    <li><a href="#bm53-缺失的第一个正整数">BM53 缺失的第一个正整数</a></li>
+    <li><a href="#bm54-三数之和">BM54 三数之和</a></li>
+    <li><a href="#bm55-没有重复项数字的全排列">BM55 没有重复项数字的全排列</a></li>
+    <li><a href="#bm56-有重复项数字的全排列">BM56 有重复项数字的全排列</a></li>
+    <li><a href="#bm57-岛屿数量">BM57 岛屿数量</a></li>
+    <li><a href="#bm58-字符串的排列">BM58 字符串的排列</a></li>
+    <li><a href="#bm59-n皇后问题">BM59 N皇后问题</a></li>
+    <li><a href="#bm60-括号生成">BM60 括号生成</a></li>
+    <li><a href="#bm61-矩阵最长递增路径">BM61 矩阵最长递增路径</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="https://c4rla.github.io/roll/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
